@@ -1,3 +1,5 @@
+import Page from "./(shop)/home/page";
+
 export default function Home() {
-  return <div>Olá</div>;
+  return <Page />;
 }

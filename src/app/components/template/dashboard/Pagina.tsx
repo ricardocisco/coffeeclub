@@ -25,7 +25,7 @@ export default async function Pagina(props: PaginaProps) {
   }
 
   return (
-    <SidebarProvider>
+    <SidebarProvider className="font-sans">
       <AppSidebar />
       <main className={`flex-1 p-7 ${props.className ?? ""}`}>
         <div className="flex justify-between">

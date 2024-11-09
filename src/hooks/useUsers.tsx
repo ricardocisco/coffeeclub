@@ -4,11 +4,8 @@ import { useEffect, useState } from "react";
 
 export default function useUsers() {
   const [users, setUsers] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUsers = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch("/api/services/user", {
         method: "GET",
@@ -17,8 +14,6 @@ export default function useUsers() {
       setUsers(data);
     } catch (err) {
       console.log(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 

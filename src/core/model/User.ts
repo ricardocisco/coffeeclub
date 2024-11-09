@@ -1,4 +1,4 @@
-import { Role as PrismaRole } from "@prisma/client";
+import { Role as PrismaRole, Status as PrismaStatus } from "@prisma/client";
 
 export type Role = PrismaRole;
 
@@ -8,4 +8,48 @@ export interface User {
   email: string;
   role: Role;
   password: string;
+  order?: Order[];
+}
+
+export interface Coffee {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  description?: string;
+  imageUrl: string;
+  additions?: Addition[];
+  createdAt: Date;
+  orderItem?: OrderItem[];
+}
+
+export interface Addition {
+  id: string;
+  name: string;
+  price: number;
+  createdAt: Date;
+  coffeeId: string;
+  coffee?: Coffee;
+  orderItemId?: string;
+  orderItem?: OrderItem;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  user?: User;
+  items?: OrderItem[];
+  total: number;
+  createdAt: Date;
+  status: PrismaStatus;
+}
+
+export interface OrderItem {
+  id: string;
+  coffeeId: string;
+  coffee?: Coffee;
+  additions?: Addition[];
+  orderId: string;
+  order?: Order;
+  createdAt: Date;
 }
