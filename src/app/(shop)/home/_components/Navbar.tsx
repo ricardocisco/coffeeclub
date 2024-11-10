@@ -9,46 +9,74 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { auth } from "../../../../../auth";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, CircleUser } from "lucide-react";
+import { ChevronDown, CircleUser, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import logout from "@/app/(auth)/_actions/logout";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import Orders from "./Orders";
+import Count from "./Count";
 
 export default async function Navbar() {
   const session = await auth();
   const user = session?.user;
+  const userId = user?.id;
 
   return (
-    <nav className="flex items-center justify-between w-[1040px] p-2 m-auto ">
+    <nav className="flex items-center justify-between lg:w-[1040px] w-full p-4 m-auto ">
       <h1 className="text-xl">Coffee Club</h1>
-      {user ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              <CircleUser />
-              {user?.name}
-              <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Keyboard shortcuts</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+      <div className="flex items-center gap-4">
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <CircleUser />
+                {user?.name}
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Keyboard shortcuts</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
               <form action={logout}>
                 <Button variant={"ghost"}>Sair</Button>
               </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <Link href="/login">Login</Link>
-      )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Link href="/login">Login</Link>
+        )}
+        <div>
+          <Sheet>
+            <SheetTrigger>
+              <div className="flex relative">
+                <ShoppingCart className="w-6 h-6" />
+                <Count />
+              </div>
+            </SheetTrigger>
+            <SheetContent className="w-[400px] sm:w-[540px]">
+              <SheetHeader>
+                <SheetTitle>Carrinho</SheetTitle>
+              </SheetHeader>
+              <div className="h-full">
+                <Orders userId={userId} />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
     </nav>
   );
 }

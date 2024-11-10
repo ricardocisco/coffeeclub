@@ -20,15 +20,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 import useCoffes from "@/hooks/useCoffe";
 import { Book, ChevronsUpDown, Minus, Plus, ShoppingCart } from "lucide-react";
 
 export default function CardItem() {
+  const { toast } = useToast();
   const { coffees } = useCoffes();
   const { addCart } = useCartStore();
 
   return (
-    <div className="grid lg:grid-cols-5 sm:grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-3">
       {coffees.map((coffee) => (
         <Card key={coffee.id}>
           <CardContent className="p-1">
@@ -37,7 +39,7 @@ export default function CardItem() {
                 <img
                   src={coffee.imageUrl}
                   alt={coffee.name}
-                  className="w-[200px] h-full rounded-md"
+                  className="w-full max-w-[250px] h-full rounded-md"
                 ></img>
               </picture>
               <Dialog>
@@ -179,7 +181,17 @@ export default function CardItem() {
               <CardDescription>R${coffee.price.toFixed(2)}</CardDescription>
               <CardDescription>Estoque: {coffee.stock}</CardDescription>
             </div>
-            <Button variant={"outline"} onClick={() => addCart(coffee)}>
+            <Button
+              variant={"outline"}
+              size={"sm"}
+              onClick={() => {
+                addCart(coffee);
+                toast({
+                  title: "Adicionado ao carrinho",
+                  description: "Café adicionado ao carrinho com sucesso :)",
+                });
+              }}
+            >
               <ShoppingCart />
             </Button>
           </CardFooter>
