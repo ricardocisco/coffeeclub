@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sheet";
 import Orders from "./Orders";
 import Count from "./Count";
+import { ToggleTheme } from "@/app/components/theme/theme-toggle";
 
 export default async function Navbar() {
   const session = await auth();
@@ -30,7 +31,7 @@ export default async function Navbar() {
   return (
     <nav className="flex items-center justify-between lg:w-[1040px] w-full p-4 m-auto ">
       <h1 className="text-xl">Coffee Club</h1>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -41,13 +42,11 @@ export default async function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Keyboard shortcuts</DropdownMenuItem>
+                <DropdownMenuItem>Meus Pedidos</DropdownMenuItem>
+                <DropdownMenuItem>Configurações</DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <form action={logout}>
@@ -58,7 +57,8 @@ export default async function Navbar() {
         ) : (
           <Link href="/login">Login</Link>
         )}
-        <div>
+        <div className="flex items-center gap-2">
+          <ToggleTheme />
           <Sheet>
             <SheetTrigger>
               <div className="flex relative">

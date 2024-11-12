@@ -62,6 +62,7 @@ export default function OrderList() {
             <TableHead className="w-[100px]">Preço</TableHead>
             <TableHead className="w-[100px]">Status</TableHead>
             <TableHead className="w-[100px]">Detalhes</TableHead>
+            <TableHead className="w-[100px]">Data</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -89,6 +90,13 @@ export default function OrderList() {
                     </div>
                   </HoverCardContent>
                 </HoverCard>
+              </TableCell>
+              <TableCell>
+                {new Date(item.createdAt).toLocaleDateString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
               </TableCell>
             </TableRow>
           ))}

@@ -2,17 +2,35 @@
 
 import { useCartStore } from "@/app/store/cartStore";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useOrder from "@/hooks/useOrder";
-import { Minus, Plus, Trash } from "lucide-react";
+import { DialogDescription } from "@radix-ui/react-dialog";
+import { Minus, PackageCheck, Plus, Trash } from "lucide-react";
+import { useState } from "react";
 
 export default function Orders({ userId }) {
   const { createOrder } = useOrder();
-  const { items, increaseQuantity, decreaseQuantity, removeItem, total } =
-    useCartStore();
+  const {
+    items,
+    increaseQuantity,
+    decreaseQuantity,
+    removeItem,
+    total,
+    clearCart,
+  } = useCartStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleCreateOrder = async () => {
+    setIsLoading(true);
     try {
       const order = await createOrder({
         userId,
@@ -23,8 +41,17 @@ export default function Orders({ userId }) {
         total,
       });
       console.log(order);
+      setTimeout(() => {
+        clearCart();
+        setIsDialogOpen(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setIsDialogOpen(false);
+        }, 3000);
+      }, 2000);
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -101,10 +128,30 @@ export default function Orders({ userId }) {
           variant={"outline"}
           className="w-full mt-2 bg-blue-600 text-white"
           onClick={handleCreateOrder}
+          disabled={isLoading}
         >
-          Finalizar Compra R${total.toFixed(2)}
+          {isLoading
+            ? "Finalizando Pedido..."
+            : `Finalizar Compra R${total.toFixed(2)}`}
         </Button>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              <PackageCheck className="w-6 h-6" />
+              Compra Realizada com Sucesso!
+            </DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+            Seu pedido foi realizado com sucesso!
+          </DialogDescription>
+          <DialogFooter>
+            <Button onClick={() => setIsDialogOpen(false)}>Fechar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -21,7 +21,7 @@ export default async function Pagina(props: PaginaProps) {
   const session = await checkAdmin();
 
   if (!session || session.user.role !== "ADMIN") {
-    redirect("/login");
+    redirect("/");
   }
 
   return (
