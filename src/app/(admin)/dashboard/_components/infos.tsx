@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import InfoCard from "./cards";
 import { Chart } from "./chart";
 import useOrder from "@/hooks/useOrder";
+import { DatePickerWithRange } from "./date-picker";
 
 export default function InfoData() {
   const { order } = useOrder();
@@ -29,11 +30,12 @@ export default function InfoData() {
     }),
     pedidos: item.items.length,
     usuarios: order.map((item) => item.user.id).length,
+    receita: item.total.toFixed(2),
   }));
 
   return (
     <main className="flex flex-col gap-4 py-4">
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <InfoCard
           label="Receita Total"
           icon={<DollarSign />}
@@ -51,26 +53,29 @@ export default function InfoData() {
           data={totalCoffees}
         />
       </div>
-      <div className="flex flex-col lg:flex-row gap-4 ">
-        <Chart chartData={chartData} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2">
+          <DatePickerWithRange />
+          <Chart chartData={chartData} />
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Ultimas vendas</CardTitle>
             <CardDescription>
-              você fez {order.length} ultilmas vendas
+              Suas ultilmas {order.length} vendas
             </CardDescription>
           </CardHeader>
           <CardContent>
             {order.slice(0, 5).map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-center px-2 w-[400px] transition-colors hover:bg-muted/50 rounded-md"
+                className="flex justify-between items-center px-2  transition-colors hover:bg-muted/50 rounded-md"
               >
                 <div>
                   <Label className="text-lg">{item.user.name}</Label>
                   <p className="text-gray-400">{item.user.email}</p>
                 </div>
-                <Label className="text-lg">R$ {item.total}</Label>
+                <Label className="text-base">R$ {item.total}</Label>
               </div>
             ))}
           </CardContent>
