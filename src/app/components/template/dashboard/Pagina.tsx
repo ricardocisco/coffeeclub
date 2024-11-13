@@ -7,7 +7,7 @@ import { auth } from "../../../../../auth";
 import { redirect } from "next/navigation";
 
 export interface PaginaProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
 }
 

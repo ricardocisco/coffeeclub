@@ -132,7 +132,7 @@ export default function Orders({ userId }) {
         >
           {isLoading
             ? "Finalizando Pedido..."
-            : `Finalizar Compra R${total.toFixed(2)}`}
+            : `Finalizar Compra R$ ${total.toFixed(2)}`}
         </Button>
       </div>
 
