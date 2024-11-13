@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DollarSign, Package, UsersRound } from "lucide-react";
+import { Coffee, DollarSign, Package, UsersRound } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import InfoCard from "./cards";
 import { Chart } from "./chart";
@@ -16,11 +16,10 @@ import useOrder from "@/hooks/useOrder";
 export default function InfoData() {
   const { order } = useOrder();
 
-  console.log(order);
-
   const totalRevenue = order.reduce((acc, item) => acc + item.total, 0);
   const totalOrders = order.length;
   const totalUsers = order.map((item) => item.user.id).length;
+  const totalCoffees = order.reduce((acc, item) => acc + item.items.length, 0);
 
   const chartData = order.map((item) => ({
     month: new Date(item.createdAt).toLocaleDateString("pt-BR", {
@@ -46,8 +45,13 @@ export default function InfoData() {
           data={totalOrders}
         />
         <InfoCard label="Usuarios" icon={<UsersRound />} data={totalUsers} />
+        <InfoCard
+          label="Total de Cafés Vendidos"
+          icon={<Coffee />}
+          data={totalCoffees}
+        />
       </div>
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-col lg:flex-row gap-4 ">
         <Chart chartData={chartData} />
         <Card>
           <CardHeader>

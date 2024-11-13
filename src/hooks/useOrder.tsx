@@ -12,7 +12,6 @@ export default function useOrder() {
         method: "GET",
       });
       const data: Order[] = await response.json();
-      console.log("FETCH GERAL", data);
       setOrder(data);
     } catch (err) {
       console.log(err);

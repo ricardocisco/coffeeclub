@@ -10,6 +10,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const chartConfig = {
   pedidos: {
@@ -24,28 +31,36 @@ const chartConfig = {
 
 export function Chart({ chartData }) {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          allowDataOverflow={true}
-          tickFormatter={(value) =>
-            new Date(value).toLocaleDateString("pt-BR", {
-              day: "numeric",
-              month: "numeric",
-              year: "numeric",
-            })
-          }
-        />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="pedidos" fill="var(--color-pedidos)" radius={4} />
-        <Bar dataKey="usuarios" fill="var(--color-usuarios)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Dashboard</CardTitle>
+        <CardDescription>Últimos 30 dias</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              allowDataOverflow={true}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleDateString("pt-BR", {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                })
+              }
+            />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar dataKey="pedidos" fill="var(--color-pedidos)" radius={4} />
+            <Bar dataKey="usuarios" fill="var(--color-usuarios)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
