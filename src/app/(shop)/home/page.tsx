@@ -5,7 +5,7 @@ export default function Page() {
   return (
     <div className="flex flex-col font-sans">
       <Navbar />
-      <div className="flex justify-center p-4 gap-4">
+      <div className="flex lg:w-[1040px] w-full mx-auto p-4">
         <CardItem />
       </div>
     </div>

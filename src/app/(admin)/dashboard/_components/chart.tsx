@@ -65,8 +65,8 @@ export function Chart({ chartData }) {
           })}
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="">
+      <CardContent className="p-2 pt-6">
+        <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -74,13 +74,7 @@ export function Chart({ chartData }) {
               tickLine={false}
               axisLine={false}
               tickMargin={10}
-              tickFormatter={(value) =>
-                new Date(value).toLocaleDateString("pt-BR", {
-                  day: "numeric",
-                  month: "numeric",
-                  year: "numeric",
-                })
-              }
+              tickFormatter={chartData.month}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />

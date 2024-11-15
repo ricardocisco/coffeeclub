@@ -1,77 +1,34 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useToast } from "@/hooks/use-toast";
 import useCoffes from "@/hooks/useCoffe";
-import { Trash } from "lucide-react";
+import { DataTable } from "./_table/data-table";
+import { columns as generateColumns } from "./_table/columns";
 
 export default function ListItem() {
-  const { coffees, deleteCoffees } = useCoffes();
-  const { toast } = useToast();
+  const { coffees, deleteCoffees, loading, error } = useCoffes();
+
+  const columns = generateColumns(deleteCoffees);
 
   return (
-    <div className="rounded-sm border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Imagem</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Preco</TableHead>
-            <TableHead>Quantidade</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {coffees.map((coffee) => (
-            <TableRow key={coffee.id}>
-              <TableCell>
-                <picture>
-                  <img
-                    className="w-[50px] h-[50px] rounded-sm"
-                    src={coffee.imageUrl}
-                    alt={coffee.name}
-                  ></img>
-                </picture>
-              </TableCell>
-              <TableCell>{coffee.name}</TableCell>
-              <TableCell>R$ {coffee.price.toFixed(2)}</TableCell>
-              <TableCell>{coffee.stock}</TableCell>
-              <TableCell>
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  onClick={() => {
-                    try {
-                      deleteCoffees(coffee.id);
-                      toast({
-                        title: "Sucesso",
-                        description: "Café deletado com sucesso",
-                        variant: "default",
-                      });
-                    } catch (error) {
-                      console.error(error);
-                      toast({
-                        title: "Erro",
-                        description: "Erro ao deletar o cafe",
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                >
-                  <Trash className="text-red-600 h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="flex flex-col gap-4 py-2">
+      {loading ? (
+        Array.from({ length: 20 }).map((_, index) => (
+          <div
+            key={index}
+            className="animate-pulse flex justify-between items-center px-2 py-3 rounded-md bg-muted/50"
+          >
+            <div>
+              <div className="h-4 w-24 bg-muted/50 rounded mb-1"></div>
+              <div className="h-3 w-32 bg-muted/50 rounded"></div>
+            </div>
+            <div className="h-4 w-16 bg-muted/50 rounded"></div>
+          </div>
+        ))
+      ) : error ? (
+        <div>erro ao consultar: {error}</div>
+      ) : (
+        <DataTable columns={columns} data={coffees} />
+      )}
     </div>
   );
 }

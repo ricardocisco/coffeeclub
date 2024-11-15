@@ -1,36 +1,13 @@
 "use client";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { OrderItem, Status } from "@/core/model/Order";
+import { OrderItem } from "@/core/model/Order";
 import useOrder from "@/hooks/useOrder";
-import { Clock, Info, PackageCheck, Truck, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const StatusIcons = {
-  PENDENTE: <Clock className="w-4 h-4 text-orange-600" />,
-  ENVIADO: <Truck className="w-4 h-4 text-green-600" />,
-  ENTREGUE: <PackageCheck className="w-4 h-4 text-blue-600" />,
-  CANCELADO: <X className="w-4 h-4 text-red-600" />,
-};
-
-function getStatusIcon(status: Status): JSX.Element | null {
-  return StatusIcons[status] || null;
-}
+import { DataTable } from "./data-table";
+import { columns as generateColumns } from "./columns";
 
 export default function OrderList() {
-  const { order, fetchById } = useOrder();
+  const { order, fetchById, loading, error } = useOrder();
   const [orderDetails, setOrderDetails] = useState<{
     [key: string]: OrderItem[];
   }>({});
@@ -51,57 +28,44 @@ export default function OrderList() {
     });
   }, [order]);
 
+  const orderFilter = order.map((item) => ({
+    ...item,
+    id: item.user.id,
+    email: item.user.email,
+    name: item.user.name,
+    status: item.status,
+    items: orderDetails[item.id],
+    date: new Date(item.createdAt).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }),
+  }));
+
+  const columns = generateColumns;
+
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">GUID</TableHead>
-            <TableHead className="w-[100px]">E-mail</TableHead>
-            <TableHead className="w-[100px]">Nome</TableHead>
-            <TableHead className="w-[100px]">Preço</TableHead>
-            <TableHead className="w-[100px]">Status</TableHead>
-            <TableHead className="w-[100px]">Detalhes</TableHead>
-            <TableHead className="w-[100px]">Data</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {order.map((item) => (
-            <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.user.id}</TableCell>
-              <TableCell className="font-medium">{item.user.email}</TableCell>
-              <TableCell className="font-medium">{item.user.name}</TableCell>
-              <TableCell className="font-medium">
-                R$ {item.total.toFixed(2)}
-              </TableCell>
-              <TableCell className="font-medium">
-                {getStatusIcon(item.status)}
-              </TableCell>
-              <TableCell className="font-medium">
-                <HoverCard>
-                  <HoverCardTrigger>
-                    <Info />
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    <div className="flex flex-col">
-                      {orderDetails[item.id]?.map((detail) => (
-                        <p key={detail.coffee.id}>{detail.coffee.name}</p>
-                      ))}
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              </TableCell>
-              <TableCell>
-                {new Date(item.createdAt).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="flex flex-col gap-4">
+      {loading ? (
+        Array.from({ length: 10 }).map((_, index) => (
+          <div
+            key={index}
+            className="animate-pulse flex  justify-between items-center px-2 py-3 rounded-md bg-muted/50"
+          >
+            <div>
+              <div className="h-4 w-24 bg-muted/50 rounded mb-1"></div>
+              <div className="h-3 w-32 bg-muted/50 rounded"></div>
+            </div>
+            <div className="h-4 w-16 bg-muted/50 rounded"></div>
+          </div>
+        ))
+      ) : error ? (
+        <div className="flex justify-center items-center h-64 text-red-600">
+          Erro ao carregar os pedidos
+        </div>
+      ) : (
+        <DataTable columns={columns} data={orderFilter} />
+      )}
     </div>
   );
 }

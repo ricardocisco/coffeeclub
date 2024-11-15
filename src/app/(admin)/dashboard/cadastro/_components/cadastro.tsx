@@ -48,7 +48,9 @@ export default function CadastroForm() {
           </Button>
         )}
       </div>
-      {layout === "grid" ? <CardItem /> : <ListItem />}
+      <div className="flex">
+        {layout === "grid" ? <CardItem /> : <ListItem />}
+      </div>
     </div>
   );
 }

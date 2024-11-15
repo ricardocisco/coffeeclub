@@ -1,3 +1,9 @@
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export type Coffee = {
   id: string;
   name: string;
@@ -17,9 +23,10 @@ export type OrderItem = {
 export type Order = {
   id: string;
   createdAt: string;
-  orderItems: OrderItem[];
+  items: OrderItem[];
   status: string;
   total: number;
+  user: User;
 };
 
 export type Status = {

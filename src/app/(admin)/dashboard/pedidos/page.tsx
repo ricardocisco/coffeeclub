@@ -7,7 +7,7 @@ export default function Pedidos() {
     <Pagina>
       <Titulo title="Pedidos" subtitle="Verificar pedidos" />
       <div className="w-full py-2">
-        <div className="rounded-sm border">
+        <div>
           <OrderList />
         </div>
       </div>

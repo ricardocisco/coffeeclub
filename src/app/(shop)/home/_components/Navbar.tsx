@@ -45,12 +45,18 @@ export default async function Navbar() {
               <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>Meus Pedidos</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link className="w-full" href="/pedidos">
+                    Meus Pedidos
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Configurações</DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <form action={logout}>
-                <Button variant={"ghost"}>Sair</Button>
+                <Button className="w-full" variant={"ghost"}>
+                  Sair
+                </Button>
               </form>
             </DropdownMenuContent>
           </DropdownMenu>
