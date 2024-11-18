@@ -30,7 +30,9 @@ export default async function Navbar() {
 
   return (
     <nav className="flex items-center justify-between lg:w-[1040px] w-full p-4 m-auto ">
-      <h1 className="text-xl">Coffee Club</h1>
+      <Link href="/" className="text-xl">
+        Coffee Club
+      </Link>
       <div className="flex items-center gap-2">
         {user ? (
           <DropdownMenu>

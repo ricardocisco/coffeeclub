@@ -24,7 +24,7 @@ export default function useCoffes() {
         let message = "Erro ao buscar o anúncio";
 
         switch (response.status) {
-          case 404:
+          case 400:
             message = "Solicitação inválida, Verifique os parâmetros";
           case 404:
             message = "Recurso não encontrado. Verifique o URL.";

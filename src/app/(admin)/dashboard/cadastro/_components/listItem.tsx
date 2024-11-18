@@ -10,7 +10,7 @@ export default function ListItem() {
   const columns = generateColumns(deleteCoffees);
 
   return (
-    <div className="flex flex-col gap-4 py-2">
+    <div className="gap-4 py-2">
       {loading ? (
         Array.from({ length: 20 }).map((_, index) => (
           <div

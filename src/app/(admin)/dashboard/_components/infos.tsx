@@ -16,6 +16,7 @@ import { DatePickerWithRange } from "./date-picker";
 import { useState } from "react";
 import { Order } from "@/core/model/Order";
 import { DateRange } from "react-day-picker";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function InfoData() {
   const { order }: { order: Order[] } = useOrder();
@@ -23,7 +24,7 @@ export default function InfoData() {
 
   const totalRevenue = order.reduce((acc, item) => acc + item.total, 0);
   const totalOrders = order.length;
-  const totalUsers = order.map((item) => item.user.id).length;
+  const totalUsers = order.map((item) => item.user).length;
   const totalCoffees = order.reduce((acc, item) => acc + item.items.length, 0);
 
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -58,10 +59,12 @@ export default function InfoData() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {loading ? (
           Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="flex flex-col gap-2 animate-pulse">
-              <div className="h-6 rounded-md bg-muted/50"></div>
-              <div className="h-6 rounded-md bg-muted/50"></div>
-              <div className="h-6 rounded-md bg-muted/50"></div>
+            <div key={index} className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-[250px]" />
+                <Skeleton className="h-6 w-[200px]" />
+              </div>
             </div>
           ))
         ) : (
@@ -108,15 +111,12 @@ export default function InfoData() {
             {loading
               ? // Placeholder para as últimas vendas
                 Array.from({ length: 5 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="animate-pulse flex  justify-between items-center px-2 py-3 rounded-md bg-muted/50"
-                  >
-                    <div>
-                      <div className="h-4 w-24 bg-muted/50 rounded mb-1"></div>
-                      <div className="h-3 w-32 bg-muted/50 rounded"></div>
+                  <div key={index} className="flex items-center space-x-4">
+                    <Skeleton className="h-12 w-12 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-4 w-[200px]" />
                     </div>
-                    <div className="h-4 w-16 bg-muted/50 rounded"></div>
                   </div>
                 ))
               : order.slice(0, 5).map((item) => (
@@ -128,7 +128,9 @@ export default function InfoData() {
                       <Label className="text-lg">{item.user.name}</Label>
                       <p className="text-gray-400">{item.user.email}</p>
                     </div>
-                    <Label className="text-base">R$ {item.total}</Label>
+                    <Label className="text-base">
+                      R$ {item.total.toFixed(2)}
+                    </Label>
                   </div>
                 ))}
           </CardContent>

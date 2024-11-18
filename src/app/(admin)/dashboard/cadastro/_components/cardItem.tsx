@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import useCoffes from "@/hooks/useCoffe";
@@ -33,15 +34,12 @@ export default function CardItem() {
     <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-3">
       {loading ? (
         Array.from({ length: 20 }).map((_, index) => (
-          <div
-            key={index}
-            className="animate-pulse h-44 flex justify-between items-center px-2 py-3 rounded-md bg-muted/50"
-          >
-            <div>
-              <div className="h-8 w-24 bg-muted/50 rounded mb-1"></div>
-              <div className="h-8 w-32 bg-muted/50 rounded"></div>
+          <div key={index} className="flex flex-col space-y-3">
+            <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
             </div>
-            <div className="h-10 w-16 bg-muted/50 rounded"></div>
           </div>
         ))
       ) : error ? (

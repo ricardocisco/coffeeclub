@@ -9,6 +9,7 @@ interface ApiError {
 
 export default function useUsers() {
   const [users, setUsers] = useState([]);
+  const [userDetails, setUserDetails] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +24,7 @@ export default function useUsers() {
         let message = "Erro ao buscar o anúncio";
 
         switch (response.status) {
-          case 404:
+          case 400:
             message = "Solicitação inválida, Verifique os parâmetros";
           case 404:
             message = "Recurso não encontrado. Verifique o URL.";
@@ -64,6 +65,24 @@ export default function useUsers() {
     }
   };
 
+  const fetchUserById = async (id: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/services/user/${id}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setUserDetails(data);
+    } catch (error) {
+      const apiError = error as ApiError;
+      setError(apiError.message);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updateUser = async (id: string, data: Partial<User>) => {
     setLoading(true);
     setError(null);
@@ -89,5 +108,13 @@ export default function useUsers() {
     fetchUsers();
   }, []);
 
-  return { users, deleteUser, updateUser, loading, error };
+  return {
+    users,
+    deleteUser,
+    updateUser,
+    loading,
+    error,
+    fetchUserById,
+    userDetails,
+  };
 }

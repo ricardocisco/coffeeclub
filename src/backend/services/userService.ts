@@ -5,6 +5,11 @@ export async function getAllUsers() {
   return await db.user.findMany();
 }
 
+export async function getUserById(id: string) {
+  if (!id) throw new Error("ID nao informado");
+
+  return await db.user.findUnique({ where: { id }, include: { Order: true } });
+}
 export async function deleteUser(id: string) {
   try {
     const result = await db.user.delete({ where: { id } });

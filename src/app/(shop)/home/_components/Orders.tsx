@@ -13,11 +13,11 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useOrder from "@/hooks/useOrder";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { Minus, PackageCheck, Plus, Trash } from "lucide-react";
+import { Minus, PackageCheck, Plus, Trash, X } from "lucide-react";
 import { useState } from "react";
 
 export default function Orders({ userId }) {
-  const { createOrder } = useOrder();
+  const { createOrder, error } = useOrder();
   const {
     items,
     increaseQuantity,
@@ -28,6 +28,9 @@ export default function Orders({ userId }) {
   } = useCartStore();
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleCreateOrder = async () => {
     setIsLoading(true);
@@ -40,17 +43,28 @@ export default function Orders({ userId }) {
         })),
         total,
       });
+
       console.log(order);
+
+      setDialogTitle("Compra Realizada com Sucesso!");
+      setDialogMessage("Seu pedido foi realizado com sucesso!");
+      setIsError(false);
+      setIsDialogOpen(true);
+
       setTimeout(() => {
         clearCart();
-        setIsDialogOpen(true);
-        setIsLoading(false);
         setTimeout(() => {
           setIsDialogOpen(false);
         }, 3000);
       }, 2000);
     } catch (err) {
       console.log(err);
+
+      setDialogTitle("Erro ao Realizar Pedido");
+      setDialogMessage(error || "Ocorreu um erro inesperado. Tente novamente.");
+      setIsError(true);
+      setIsDialogOpen(true);
+
       setIsLoading(false);
     }
   };
@@ -140,15 +154,24 @@ export default function Orders({ userId }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              <PackageCheck className="w-6 h-6" />
-              Compra Realizada com Sucesso!
+              <div className="flex items-center">
+                {isError ? (
+                  <X className="w-6 h-6 text-red-600" />
+                ) : (
+                  <PackageCheck className="w-6 h-6 text-green-600" />
+                )}
+                {dialogTitle}
+              </div>
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription>
-            Seu pedido foi realizado com sucesso!
-          </DialogDescription>
+          <DialogDescription>{dialogMessage}</DialogDescription>
           <DialogFooter>
-            <Button onClick={() => setIsDialogOpen(false)}>Fechar</Button>
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              className={isError ? "bg-red-600" : "bg-green-600"}
+            >
+              Fechar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

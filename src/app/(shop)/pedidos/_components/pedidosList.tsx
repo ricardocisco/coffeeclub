@@ -8,10 +8,10 @@ export default async function PedidoList() {
   const userId = user?.id;
 
   return (
-    <div className="lg:w-[1040px] w-full mx-auto">
+    <div className="lg:w-[1040px] w-full mx-auto p-4">
       <Label className="text-2xl">Meus Pedidos</Label>
       <div>
-        <ListOrder />
+        <ListOrder userId={userId} />
       </div>
     </div>
   );

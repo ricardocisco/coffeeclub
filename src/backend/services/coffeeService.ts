@@ -16,5 +16,7 @@ export async function createCoffee(data: Coffee) {
 }
 
 export async function deleteCoffee(id: string) {
+  if (!id) throw new Error("ID nao informado");
+
   return await db.coffee.delete({ where: { id } });
 }

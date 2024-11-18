@@ -5,6 +5,7 @@ import useOrder from "@/hooks/useOrder";
 import { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { columns as generateColumns } from "./columns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OrderList() {
   const { order, fetchById, loading, error } = useOrder();
@@ -48,15 +49,12 @@ export default function OrderList() {
     <div className="flex flex-col gap-4">
       {loading ? (
         Array.from({ length: 10 }).map((_, index) => (
-          <div
-            key={index}
-            className="animate-pulse flex  justify-between items-center px-2 py-3 rounded-md bg-muted/50"
-          >
-            <div>
-              <div className="h-4 w-24 bg-muted/50 rounded mb-1"></div>
-              <div className="h-3 w-32 bg-muted/50 rounded"></div>
+          <div key={index} className="flex items-center space-x-4 w-full">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-[250px]" />
+              <Skeleton className="h-6 w-[200px]" />
             </div>
-            <div className="h-4 w-16 bg-muted/50 rounded"></div>
           </div>
         ))
       ) : error ? (

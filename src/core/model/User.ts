@@ -8,7 +8,7 @@ export interface User {
   email: string;
   role: Role;
   password: string;
-  order?: Order[];
+  Order?: Order[];
 }
 
 export interface Coffee {
