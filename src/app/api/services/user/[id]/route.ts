@@ -5,14 +5,23 @@ import {
   updateUser,
 } from "@/backend/services/userService";
 import { User } from "@/core/model/User";
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 async function updateFun(id: string, data: Partial<User>) {
   if (!id) {
     throw new Error("ID não informado");
   }
+  const formattedData: Prisma.UserUpdateInput = {
+    ...data,
+    Order: data.Order
+      ? {
+          connect: data.Order.map((order) => ({ id: order.id })),
+        }
+      : undefined,
+  };
 
-  return await updateUser(id, data);
+  return await updateUser(id, formattedData);
 }
 
 export async function DELETE(
@@ -65,7 +74,7 @@ export async function PUT(
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const id = (await params).id;
   try {

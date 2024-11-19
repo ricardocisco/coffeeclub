@@ -1,5 +1,5 @@
-import { User } from "@/core/model/User";
 import db from "@/lib/db";
+import { Prisma } from "@prisma/client";
 
 export async function getAllUsers() {
   return await db.user.findMany();
@@ -21,7 +21,7 @@ export async function deleteUser(id: string) {
   }
 }
 
-export async function updateUser(id: string, data: Partial<User>) {
+export async function updateUser(id: string, data: Prisma.UserUpdateInput) {
   try {
     const result = await db.user.update({ where: { id }, data });
     if (!result) throw new Error("Erro ao atualizar usuário");

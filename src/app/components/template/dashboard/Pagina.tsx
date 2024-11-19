@@ -27,7 +27,7 @@ export default async function Pagina(props: PaginaProps) {
   return (
     <SidebarProvider className="font-sans">
       <AppSidebar />
-      <main className={`flex-1 p-7 ${props.className ?? ""}`}>
+      <main className={`flex-1 p-3 ${props.className ?? ""}`}>
         <div className="flex justify-between">
           <SidebarTrigger />
           <ToggleTheme />

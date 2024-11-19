@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { userFormData, userSchema } from "@/schemas/userSchema";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FormControl,
@@ -48,7 +48,7 @@ export default function UsuarioForm() {
   const [error] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const form = useForm({
+  const form = useForm<userFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
       name: "",
@@ -67,8 +67,14 @@ export default function UsuarioForm() {
     setIsDialogOpen(true);
   };
 
-  const onSubmit = async (data: userFormData) => {
+  const onSubmit: SubmitHandler<userFormData> = async (data: userFormData) => {
     if (!editingUser) return;
+
+    const { role } = data;
+    if (role !== "ADMIN" && role !== "USER") {
+      console.error("Role inválido");
+      return;
+    }
 
     try {
       await updateUser(editingUser.id, data);

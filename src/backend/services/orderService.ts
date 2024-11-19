@@ -1,6 +1,6 @@
 import { Order } from "@/core/model/User";
 import db from "@/lib/db";
-import { Status } from "@prisma/client";
+import { Prisma, Status } from "@prisma/client";
 
 export async function getOrderItemsById(orderId: string) {
   if (!orderId) {
@@ -56,9 +56,9 @@ export async function getAllOrders() {
 }
 
 export async function createOrder(data: Order) {
-  return await db.$transaction(async (prisma) => {
+  return await db.$transaction(async (client: Prisma.TransactionClient) => {
     for (const item of data.items) {
-      const coffee = await prisma.coffee.findUnique({
+      const coffee = await client.coffee.findUnique({
         where: {
           id: item.coffeeId,
         },
@@ -76,7 +76,7 @@ export async function createOrder(data: Order) {
     }
 
     for (const item of data.items) {
-      await prisma.coffee.update({
+      await client.coffee.update({
         where: {
           id: item.coffeeId,
         },
@@ -106,6 +106,7 @@ export async function createOrder(data: Order) {
 }
 
 export async function updateStatusOrder(id: string, status: string) {
+  console.log("ID recebido:", id);
   console.log("Status recebido:", status);
   if (!Object.values(Status).includes(status as Status))
     throw new Error("Status inválido: " + status);

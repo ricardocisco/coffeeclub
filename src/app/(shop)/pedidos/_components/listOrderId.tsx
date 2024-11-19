@@ -15,12 +15,11 @@ import { Status } from "@prisma/client";
 
 const StatusIcons = {
   PENDENTE: <Clock className="w-6 h-6 text-orange-600" />,
-  ENVIADO: <Truck className="w-6 h-6 text-green-600" />,
-  ENTREGUE: <PackageCheck className="w-6 h-6 text-blue-600" />,
+  ENVIADO: <Truck className="w-6 h-6 text-blue-600" />,
+  ENTREGUE: <PackageCheck className="w-6 h-6 text-green-600" />,
   CANCELADO: <X className="w-6 h-6 text-red-600" />,
 };
 
-// Função para renderizar o ícone de status
 function getStatusIcon(status: Status) {
   return StatusIcons[status] || null;
 }
@@ -38,9 +37,12 @@ export default function ListOrder({ userId }: { userId: string }) {
   }, [userId, userDetails, fetchUserById]);
 
   useEffect(() => {
-    if (userDetails?.Order?.length > 0) {
+    const orders = userDetails?.Order;
+
+    if (orders?.length) {
       const fetchDetails = async () => {
-        for (const order of userDetails.Order) {
+        for (const order of orders) {
+          console.log("Processando pedido id: ", order.id);
           if (!fetchedOrderIds.current.has(order.id)) {
             fetchedOrderIds.current.add(order.id);
             await fetchById(order.id);
@@ -51,6 +53,10 @@ export default function ListOrder({ userId }: { userId: string }) {
       fetchDetails();
     }
   }, [userDetails, fetchById]);
+
+  if (!userDetails || !userDetails?.Order) {
+    return <p>Carregando dados do usuário...</p>;
+  }
 
   return (
     <div>
@@ -63,10 +69,12 @@ export default function ListOrder({ userId }: { userId: string }) {
       ) : (
         orderDetail
           .slice()
-          .sort(
-            (a, b) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          )
+          .sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+
+            return dateA - dateB;
+          })
           .map((order) => (
             <div key={order.id} className="py-2">
               <Collapsible>
@@ -89,18 +97,20 @@ export default function ListOrder({ userId }: { userId: string }) {
                     <div>
                       <Label>Status:</Label>
                       <div className="flex items-center gap-2">
-                        <p>{getStatusIcon(order.status)}</p>
+                        <p>{getStatusIcon(order.status as Status)}</p>
                         <p>{order.status}</p>
                       </div>
                     </div>
                     <div>
                       <Label>Data do Pedido:</Label>
                       <p>
-                        {new Date(order.createdAt).toLocaleString("pt-BR", {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        })}
+                        {order.createdAt
+                          ? new Date(order.createdAt).toLocaleString("pt-BR", {
+                              day: "numeric",
+                              month: "numeric",
+                              year: "numeric",
+                            })
+                          : ""}
                       </p>
                     </div>
                   </div>
@@ -111,13 +121,13 @@ export default function ListOrder({ userId }: { userId: string }) {
                           <picture>
                             <img
                               className="sm:w-28 sm:h-28 w-20 h-20 rounded-sm"
-                              src={item.coffee.imageUrl}
-                              alt={item.coffee.name}
+                              src={item.coffee?.imageUrl}
+                              alt={item.coffee?.name}
                             />
                           </picture>
                           <div>
-                            <p>{item.coffee.name}</p>
-                            <p>R$ {item.coffee.price.toFixed(2)}</p>
+                            <p>{item.coffee?.name}</p>
+                            <p>R$ {item.coffee?.price.toFixed(2)}</p>
                           </div>
                         </li>
                       ))}
@@ -132,7 +142,9 @@ export default function ListOrder({ userId }: { userId: string }) {
                     ) : (
                       <Button
                         variant={"destructive"}
-                        onClick={() => updateOrderId(order.id, "CANCELADO")}
+                        onClick={() =>
+                          updateOrderId(order.id ? order.id : "", "CANCELADO")
+                        }
                       >
                         Cancelar Pedido <X />
                       </Button>

@@ -18,6 +18,13 @@ import { Order } from "@/core/model/Order";
 import { DateRange } from "react-day-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 
+export type ChartDataItem = {
+  month: string;
+  pedidos: number;
+  usuarios: number;
+  receita: string;
+};
+
 export default function InfoData() {
   const { order }: { order: Order[] } = useOrder();
   const { loading } = useOrder();
@@ -33,24 +40,26 @@ export default function InfoData() {
   });
 
   const filteredData = order.filter((item) => {
-    const createdAt = new Date(item.createdAt);
+    const createdAt = item.createdAt ? new Date(item.createdAt) : null;
     const fromDate = dateRange?.from ? new Date(dateRange.from) : null;
     const toDate = dateRange?.to ? new Date(dateRange.to) : null;
 
     return (
-      (fromDate ? createdAt >= fromDate : true) &&
-      (toDate ? createdAt <= toDate : true)
+      (fromDate ? createdAt && createdAt >= fromDate : true) &&
+      (toDate ? createdAt && createdAt <= toDate : true)
     );
   });
 
-  const chartData = filteredData.map((item) => ({
-    month: new Date(item.createdAt).toLocaleDateString("pt-BR", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-    }),
+  const chartData: ChartDataItem[] = filteredData.map((item) => ({
+    month: item.createdAt
+      ? new Date(item.createdAt).toLocaleDateString("pt-BR", {
+          day: "numeric",
+          month: "numeric",
+          year: "numeric",
+        })
+      : "",
     pedidos: item.items.length,
-    usuarios: order.map((item) => item.user.id).length,
+    usuarios: order.map((item) => item.user?.id).length,
     receita: item.total.toFixed(2),
   }));
 
@@ -109,8 +118,7 @@ export default function InfoData() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {loading
-              ? // Placeholder para as últimas vendas
-                Array.from({ length: 5 }).map((_, index) => (
+              ? Array.from({ length: 5 }).map((_, index) => (
                   <div key={index} className="flex items-center space-x-4">
                     <Skeleton className="h-12 w-12 rounded-full" />
                     <div className="space-y-2">
@@ -125,8 +133,8 @@ export default function InfoData() {
                     className="flex justify-between items-center px-2 transition-colors hover:bg-muted/50 rounded-md"
                   >
                     <div>
-                      <Label className="text-lg">{item.user.name}</Label>
-                      <p className="text-gray-400">{item.user.email}</p>
+                      <Label className="text-lg">{item.user?.name}</Label>
+                      <p className="text-gray-400">{item.user?.email}</p>
                     </div>
                     <Label className="text-base">
                       R$ {item.total.toFixed(2)}

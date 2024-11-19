@@ -8,7 +8,7 @@ import { columns as generateColumns } from "./columns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OrderList() {
-  const { order, fetchById, loading, error } = useOrder();
+  const { order, fetchById, loading, error, updateOrderId } = useOrder();
   const [orderDetails, setOrderDetails] = useState<{
     [key: string]: OrderItem[];
   }>({});
@@ -23,27 +23,31 @@ export default function OrderList() {
 
   useEffect(() => {
     order.forEach((item) => {
-      if (!orderDetails[item.id]) {
+      if (item.id && !orderDetails[item.id]) {
         fetchOrderDetails(item.id);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   const orderFilter = order.map((item) => ({
     ...item,
-    id: item.user.id,
-    email: item.user.email,
-    name: item.user.name,
+    id: item.id,
+    userId: item.user?.id,
+    email: item.user?.email,
+    name: item.user?.name,
     status: item.status,
-    items: orderDetails[item.id],
-    date: new Date(item.createdAt).toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }),
+    items: item.id ? orderDetails[item.id] : [],
+    date: item.createdAt
+      ? new Date(item.createdAt).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      : null,
   }));
 
-  const columns = generateColumns;
+  const columns = generateColumns(updateOrderId);
 
   return (
     <div className="flex flex-col gap-4">

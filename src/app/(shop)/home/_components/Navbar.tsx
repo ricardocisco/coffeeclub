@@ -26,7 +26,7 @@ import { ToggleTheme } from "@/app/components/theme/theme-toggle";
 export default async function Navbar() {
   const session = await auth();
   const user = session?.user;
-  const userId = user?.id;
+  const userId = user?.id ?? "";
 
   return (
     <nav className="flex items-center justify-between lg:w-[1040px] w-full p-4 m-auto ">
@@ -65,7 +65,7 @@ export default async function Navbar() {
         ) : (
           <Link href="/login">Login</Link>
         )}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <ToggleTheme />
           <Sheet>
             <SheetTrigger>

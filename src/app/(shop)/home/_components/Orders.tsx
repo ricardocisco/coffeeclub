@@ -16,7 +16,7 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Minus, PackageCheck, Plus, Trash, X } from "lucide-react";
 import { useState } from "react";
 
-export default function Orders({ userId }) {
+export default function Orders({ userId }: { userId: string }) {
   const { createOrder, error } = useOrder();
   const {
     items,
@@ -36,7 +36,7 @@ export default function Orders({ userId }) {
     setIsLoading(true);
     try {
       const order = await createOrder({
-        userId,
+        userId: userId,
         items: items.map((item) => ({
           coffeeId: item.id,
           quantity: item.quantity,

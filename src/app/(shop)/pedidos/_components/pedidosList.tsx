@@ -11,7 +11,11 @@ export default async function PedidoList() {
     <div className="lg:w-[1040px] w-full mx-auto p-4">
       <Label className="text-2xl">Meus Pedidos</Label>
       <div>
-        <ListOrder userId={userId} />
+        {userId ? (
+          <ListOrder userId={userId} />
+        ) : (
+          <div>Usuário não encontrado</div>
+        )}
       </div>
     </div>
   );

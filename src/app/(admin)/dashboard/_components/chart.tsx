@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
+import { ChartDataItem } from "./infos";
 
 const chartConfig = {
   pedidos: {
@@ -34,7 +35,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Chart({ chartData }) {
+type ChartProps = {
+  chartData: ChartDataItem[];
+};
+
+export function Chart({ chartData }: ChartProps) {
   const [activeChart, setActiveChart] =
     useState<keyof typeof chartConfig>("pedidos");
 
@@ -74,7 +79,7 @@ export function Chart({ chartData }) {
               tickLine={false}
               axisLine={false}
               tickMargin={10}
-              tickFormatter={chartData.month}
+              tickFormatter={(value) => `${value}`}
             />
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />

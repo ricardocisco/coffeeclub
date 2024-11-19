@@ -21,6 +21,7 @@ export interface Coffee {
   additions?: Addition[];
   createdAt: Date;
   orderItem?: OrderItem[];
+  quantity: number;
 }
 
 export interface Addition {
@@ -38,7 +39,7 @@ export interface Order {
   id: string;
   userId: string;
   user?: User;
-  items?: OrderItem[];
+  items: OrderItem[];
   total: number;
   createdAt: Date;
   status: PrismaStatus;
@@ -52,4 +53,5 @@ export interface OrderItem {
   orderId: string;
   order?: Order;
   createdAt: Date;
+  quantity: number;
 }

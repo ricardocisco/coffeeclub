@@ -14,19 +14,21 @@ export type Coffee = {
 };
 
 export type OrderItem = {
-  id: string;
+  id?: string;
   coffeeId: string;
-  orderId: string;
-  coffee: Coffee;
+  orderId?: string;
+  coffee?: Coffee;
+  quantity?: number;
 };
 
 export type Order = {
-  id: string;
-  createdAt: string;
+  id?: string;
+  userId?: string;
+  createdAt?: string;
   items: OrderItem[];
-  status: string;
+  status?: string;
   total: number;
-  user: User;
+  user?: User;
 };
 
 export type Status = {
